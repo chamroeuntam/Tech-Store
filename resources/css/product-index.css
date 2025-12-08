@@ -1,0 +1,230 @@
+/* Product index styles
+   Place this file at resources/css/product-index.css and ensure it's included via @vite in your Blade.
+*/
+
+/* Reset small things */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+/* Card */
+.product-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(22, 28, 37, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  min-height: 420px;
+  color: inherit;
+  border: 1px solid rgba(22,28,37,0.04);
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(22, 28, 37, 0.12);
+}
+
+/* Image area -> maintain aspect ratio for consistent cards */
+.product-image-container {
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(180deg, #fbfcfd 0%, #f7f9fb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-bottom: 1px solid rgba(22,28,37,0.03);
+}
+.product-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 6px;
+}
+
+/* Card content */
+.product-info {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
+}
+
+/* Title / name */
+.product-name {
+  font-size: 1.05rem;
+  line-height: 1.3;
+  margin: 0;
+  color: #111827;
+  font-weight: 600;
+}
+
+/* Small two-line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Meta row */
+.product-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Price */
+.product-price {
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+/* Quantity & stock */
+.product-quantity small {
+  color: #6b7280;
+}
+.stock-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: none;
+}
+.stock-in { background: rgba(34,197,94,0.12); color: #16a34a; }
+.stock-low { background: rgba(250,204,21,0.12); color: #b45309; }
+.stock-out { background: rgba(239,68,68,0.08); color: #b91c1c; }
+
+/* Category row (category + wishlist) */
+.product-category-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+.category-text {
+  font-size: 0.9rem;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+}
+.category-text i { color: #9ca3af; margin-right: 6px; }
+
+/* Wishlist button */
+.wishlist-form { display: flex; align-items: center; }
+.wishlist-btn {
+    background: transparent;
+    border: none;
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: #dc3545;
+  cursor: pointer;
+}
+.wishlist-btn:hover {
+    background: rgba(148, 62, 71, 0.492);
+    transform: translateY(-2px);
+    border: #b91c1c 1.5px dotted;
+    border-radius: 12px;
+}
+.wishlist-btn:active { transform: translateY(0); }
+
+/* Description */
+.product-description {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 6px 0 0 0;
+  min-height: 51.68px;
+}
+
+/* Action row */
+.product-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 8px;
+  padding-bottom: 12px;
+}
+.product-actions .btn {
+  min-width: 140px;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+}
+.product-actions .btn-outline-secondary {
+  background: transparent;
+  border: 1px solid rgba(15,23,42,0.06);
+}
+
+#product-notification {
+    position: fixed;
+    top: 24px;
+    right: -420px;
+    z-index: 9999;
+    min-width: 240px;
+    max-width: 420px;
+    padding: 14px 18px;
+    background: #1976d2;
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 40px rgba(25, 118, 210, 0.12);
+    font-size: 1rem;
+    display: none;
+    transition: right 0.32s ease, opacity 0.2s ease;
+    opacity: 0;
+    text-align: left;
+}
+
+/* Icon */
+#product-notif-icon {
+    font-size: 1.2rem;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+/* Message */
+#product-notif-message {
+    font-weight: 600;
+}
+
+/* Close Button */
+#product-notif-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.1rem;
+    float: right;
+    cursor: pointer;
+    margin-left: 12px;
+}
+
+/* Pagination / footer spacing */
+.product-grid + .mt-4 { margin-top: 20px; }
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .product-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .product-card { min-height: 380px; }
+  .product-actions .btn { min-width: 120px; }
+}
+
+@media (max-width: 576px) {
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card { min-height: auto; }
+  .product-image-container { aspect-ratio: 16 / 9; }
+  .product-actions { flex-direction: column; gap: 10px; }
+  .product-actions .btn { width: 100%; min-width: 0; }
+}

@@ -1,0 +1,152 @@
+/* Slide-only CSS */
+.hero-banner {
+  position: relative;
+  width: 1270px;
+  height: 150px;
+  margin: 0 auto;
+}
+.swiper {
+  width: 1270px;
+  height: 150px;
+  margin: 0 auto;
+}
+.swiper-slide {
+  position: relative;
+}
+.swiper-slide img {
+  width: 100%;
+  max-width: 1270px;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Swiper Arrows */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #6bd9f200 !important;
+  font-weight: normal;
+  font-size: 0.9rem;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: grey !important;
+}
+.swiper-pagination-bullet {
+  background: white;
+  opacity: 0.6;
+}
+.swiper-pagination-bullet-active {
+  background: #58b368;
+  opacity: 1;
+}
+.original-price {
+      text-decoration: line-through;
+      color: gray;
+      margin-right: 5px;
+      font-size: 16px;
+}
+.sale-price {
+      color: red;
+      font-size: 20px;
+}
+
+body {
+  font-size: 20px;
+  background-color: #f4f4e6;
+}
+/* ===================================== */
+/*        Responsive Design Rules        */
+/* ===================================== */
+
+/* Tablets and below */
+@media (max-width: 768px) {
+    .hero-banner,
+    .swiper {
+      width: 100%;
+      height: 100px;
+    }
+    .swiper-slide img {
+      max-width: 100%;
+      height: 100px;
+    }
+  .hero-text h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-text p {
+    font-size: 1rem;
+  }
+
+  .btn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .section {
+    padding: 40px 15px;
+  }
+
+  .section h2 {
+    font-size: 1.6em;
+  }
+
+  .product-card {
+    width: 45%;
+  }
+
+  .product-grid {
+    gap: 16px;
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    font-size: 18px;
+  }
+}
+
+/* Phones and small devices */
+@media (max-width: 480px) {
+    .hero-banner,
+    .swiper {
+      width: 100%;
+      height: 70px;
+    }
+    .swiper-slide img {
+      max-width: 100%;
+      height: 70px;
+    }
+  .hero-text h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-text p {
+    font-size: 0.9rem;
+  }
+
+  .product-card {
+    width: 100%;
+  }
+
+  .section h2 {
+    font-size: 1.4em;
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none; /* Hide arrows on mobile for simplicity */
+  }
+
+  .swiper-pagination {
+    bottom: 10px;
+  }
+}

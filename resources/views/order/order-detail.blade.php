@@ -1,0 +1,1083 @@
+@extends('layouts.app')
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* CSS Variables for modern design system */
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #8b5cf6;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #06b6d4;
+    --gray: #6b7280;
+    --gray-light: #f3f4f6;
+    --gray-dark: #374151;
+    --light: #f9fafb;
+    --dark: #1f2937;
+    --white: #ffffff;
+    
+    --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    --border-radius: 12px;
+    --border-radius-lg: 16px;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --container-max: 1200px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #fafbff 0%, #f1f5f9 100%);
+    color: var(--dark);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.order-detail-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .order-detail-container {
+        padding: 2rem;
+    }
+}
+
+/* Modern Header Design */
+.order-header {
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.order-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+.order-title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: -0.025em;
+    background: linear-gradient(90deg, #fff 0%, #e0e7ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.order-meta {
+    display: flex;
+    gap: 2rem;
+    font-size: 1rem;
+    opacity: 0.9;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.order-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+@media (max-width: 767px) {
+    .order-meta {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+    
+    .order-meta span {
+        justify-content: center;
+    }
+}
+
+/* Modern Section Cards */
+.section-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    transition: var(--transition);
+}
+
+.section-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-title i {
+    color: var(--primary);
+}
+
+/* Enhanced Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: var(--transition);
+}
+
+.status-pending { 
+    background-color: #fef3c7; 
+    color: #92400e; 
+}
+
+.status-confirmed { 
+    background-color: #ddd6fe; 
+    color: #5b21b6; 
+}
+
+.status-processing { 
+    background-color: #e0e7ff; 
+    color: #3730a3; 
+}
+
+.status-shipped { 
+    background-color: #fce7f3; 
+    color: #be185d; 
+}
+
+.status-delivered { 
+    background-color: #d1fae5; 
+    color: #065f46; 
+}
+
+.status-cancelled { 
+    background-color: #fee2e2; 
+    color: #991b1b; 
+}
+
+.status-refunded { 
+    background-color: #e5e7eb; 
+    color: #374151; 
+}
+
+/* Status Section Enhancement */
+.status-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .status-section {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+/* Modern Order Items */
+.order-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    background: var(--gray-light);
+    border: 1px solid transparent;
+    transition: var(--transition);
+    gap: 1rem;
+}
+
+.order-item:hover {
+    background: rgba(99, 102, 241, 0.02);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 767px) {
+    .order-item {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+    }
+}
+
+.item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--gray-light);
+    transition: var(--transition);
+}
+
+.item-image:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 767px) {
+    .item-image {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
+    }
+}
+
+.item-image .fa-image {
+    font-size: 2rem;
+    color: var(--gray);
+}
+
+.item-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.item-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+    line-height: 1.4;
+}
+
+.item-info {
+    color: var(--gray);
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 767px) {
+    .item-info {
+        justify-content: center;
+    }
+}
+
+.item-info i {
+    color: var(--primary);
+    width: 1rem;
+}
+
+.item-price {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.25rem;
+    min-width: 100px;
+    text-align: right;
+    padding: 0.5rem 1rem;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: var(--border-radius);
+}
+
+@media (max-width: 767px) {
+    .item-price {
+        text-align: center;
+        margin-top: 1rem;
+        font-size: 1.5rem;
+    }
+}
+
+/* Enhanced Info Grid */
+.info-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+    .info-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+.info-section {
+    padding: 1.5rem;
+    background: var(--gray-light);
+    border-radius: var(--border-radius);
+    border: 1px solid transparent;
+    transition: var(--transition);
+}
+
+.info-section:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.02);
+}
+
+.info-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--dark);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.875rem;
+}
+
+.info-title i {
+    color: var(--primary);
+}
+
+.info-content {
+    color: var(--gray-dark);
+    line-height: 1.6;
+    font-size: 0.875rem;
+}
+
+/* Modern Order Summary */
+.order-summary {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin-top: 1.5rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+}
+
+.summary-row.total {
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    padding-top: 1rem;
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.summary-row span:first-child {
+    opacity: 0.9;
+}
+
+.summary-row span:last-child {
+    font-weight: 600;
+}
+
+/* Modern Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    border: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    min-height: 44px;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border: 1px solid var(--primary);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+    border: 1px solid var(--success);
+}
+
+.btn-success:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    color: var(--gray);
+    border: 1px solid var(--gray);
+}
+
+.btn-outline-secondary:hover {
+    background: var(--gray);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Action Buttons Container */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+@media (max-width: 767px) {
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* Utility Classes */
+.text-center { 
+    text-align: center; 
+}
+
+.mt-4 { 
+    margin-top: 2rem; 
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.ms-3 {
+    margin-left: 1rem;
+}
+
+@media (max-width: 767px) {
+    .ms-3 {
+        margin-left: 0;
+        margin-top: 0.5rem;
+        display: block;
+    }
+}
+
+/* Payment Status */
+.payment-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.payment-method {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* Loading Animation */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.loading {
+    animation: pulse 2s infinite;
+}
+
+/* Enhanced responsive breakpoints */
+@media (max-width: 480px) {
+    .order-detail-container {
+        padding: 0.5rem;
+    }
+    
+    .order-header {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .section-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .order-item {
+        padding: 1rem;
+    }
+    
+    .info-section {
+        padding: 1rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    body {
+        background: white !important;
+    }
+    
+    .order-header {
+        background: white !important;
+        color: black !important;
+        border: 1px solid #ddd;
+    }
+    
+    .section-card {
+        box-shadow: none !important;
+        border: 1px solid #ddd;
+    }
+    
+    .btn {
+        display: none !important;
+    }
+    
+    .action-buttons {
+        display: none !important;
+    }
+}
+</style>
+
+@section('content')
+<div class="order-detail-container">
+    <!-- Order Header -->
+    <div class="order-header">
+        <h1 class="order-title">
+            <i class="fas fa-receipt"></i>
+            @if($order)
+                Order #{{ $order->order_id }}
+            @else
+                <span style="color:red">Order not found</span>
+            @endif
+        </h1>
+        <div class="order-meta">
+            @if($order)
+                <span><i class="fas fa-calendar"></i> {{ $order->created_at->format('F d, Y') }}</span>
+                <span><i class="fas fa-clock"></i> {{ $order->created_at->format('g:i A') }}</span>
+                <span><i class="fas fa-box"></i> {{ $order->total_items }} item{{ $order->total_items > 1 ? 's' : '' }}</span>
+            @else
+                <span style="color:red">Order details not available</span>
+            @endif
+        </div>
+    </div>
+
+    <!-- Order Status -->
+    <div class="section-card">
+        <h2 class="section-title">
+            <i class="fas fa-info-circle"></i>
+            Order Status
+        </h2>
+        <div class="status-section">
+            <div class="mb-3">
+                @if($order && !is_null($order->status))
+                    <span class="status-badge status-{{ $order->status }}">
+                        <i class="fas fa-circle"></i>
+                        {{ ucfirst($order->status) }}
+                    </span>
+                @else
+                    <span class="status-badge status-missing">
+                        <i class="fas fa-circle"></i>
+                        Order status not available
+                    </span>
+                @endif
+                @if($order && $order->payment)
+                    <span class="payment-status ms-3">
+                        <i class="fas fa-credit-card"></i>
+                        <strong>Payment:</strong> {{ ucfirst($order->payment->status) }}
+                    </span>
+                    <span class="payment-method ms-3">
+                        <i class="fas fa-credit-card"></i>
+                        <strong>Payment Method:</strong> {{ $order->payment?->name ?? ($order->payment?->payment_method ?? '-') }}
+                    </span>
+                @endif
+                @if($order && $order->shippingMethod)
+                    <div class="payment-method ms-3">
+                        <i class="fas fa-shipping-fast"></i>
+                        <strong>Shipping Method:</strong> {{ $order->shippingMethod?->name }}
+                    </div>
+                @endif
+            </div>
+            @if($order && !is_null($order->status) && $order->status == 'shipped')
+                <form method="POST" action="{{ route('orders.markDelivered', $order->order_id) }}" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-success"
+                            onclick="return confirm('Mark this order as delivered? This confirms you have received your order.')">
+                        <i class="fas fa-check"></i> Mark as Received
+                    </button>
+                </form>
+            @endif
+        </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="section-card">
+        <h2 class="section-title">
+            <i class="fas fa-shopping-bag"></i>
+            Order Items
+        </h2>
+        <div class="order-items-container">
+            @if($order && $order->order_items)
+                @foreach($order->order_items as $item)
+                <div class="order-item">
+                    <div class="item-image" style="position:relative;overflow:hidden;">
+                        @if($item->product->image_url)
+                            <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" onerror="this.onerror=null;this.src='{{ asset('images/no-image.png') }}';">
+                        @else
+                            <img src="{{ asset('images/no-image.png') }}" alt="No image" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
+                        @endif
+                    </div>
+                    <div class="item-details">
+                        <div class="item-name">{{ $item->product->name }}</div>
+                        <div class="item-info">
+                            <i class="fas fa-sort-numeric-up"></i>
+                            Quantity: {{ $item->quantity }}
+                        </div>
+                        <div class="item-info">
+                            <i class="fas fa-tag"></i>
+                            Unit Price: ${{ $item->price }}
+                        </div>
+                        @if($item->product->sku)
+                        <div class="item-info">
+                            <i class="fas fa-barcode"></i>
+                            SKU: {{ $item->product->sku }}
+                        </div>
+                        @endif
+                    </div>
+                    <div class="item-price">${{ $item->total_price }}</div>
+                </div>
+                @endforeach
+            @endif
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+            @if($order && !is_null($order->total_amount))
+            <div class="summary-row">
+                <span><i class="fas fa-calculator"></i> Subtotal:</span>
+                <span>${{ $order->getSubtotalAttribute() }}</span>
+            </div>
+            @else
+            <div class="summary-row">
+                <span><i class="fas fa-calculator"></i> Subtotal:</span>
+                <span>Not available</span>
+            </div>
+            @endif
+            @if($order && !is_null($order->shipping_cost))
+            <div class="summary-row">
+                <span><i class="fas fa-truck"></i> Shipping:</span>
+                <span>${{ $order->shipping_cost }}</span>
+            </div>
+            @else
+            <div class="summary-row">
+                <span><i class="fas fa-truck"></i> Shipping:</span>
+                <span>Not available</span>
+            </div>
+            @endif
+        
+            @if($order && !is_null($order->grand_total))
+            <div class="summary-row total">
+                <span><i class="fas fa-coins"></i> Total:</span>
+                <span>${{ $order->getGrandTotalAttribute() }}</span>
+            </div>
+            @else
+            <div class="summary-row total">
+                <span><i class="fas fa-coins"></i> Total:</span>
+                <span>Not available</span>
+            </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Shipping Information -->
+    <div class="section-card">
+        <h2 class="section-title">
+            <i class="fas fa-address-card"></i>
+            Shipping & Billing Information
+        </h2>
+        <div class="info-grid">
+            <div class="info-section">
+                <div class="info-title">
+                    <i class="fas fa-user"></i>
+                    Billing Information
+                </div>
+                <div class="info-content">
+                    @if($order)
+                        {{ $order->first_name }} {{ $order->last_name }}<br>
+                        <i class="fas fa-envelope"></i> {{ $order->email }}<br>
+                        <i class="fas fa-phone"></i> {{ $order->phone }}
+                    @else
+                        <span>Billing information not available</span>
+                    @endif
+                </div>
+            </div>
+            <div class="info-section">
+                <div class="info-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Shipping Address
+                </div>
+                <div class="info-content">
+                    @if($order)
+                        @if($order->shipping_first_name)
+                            <i class="fas fa-user"></i> {{ $order->shipping_first_name }} {{ $order->shipping_last_name }}<br>
+                        @endif
+                        <i class="fas fa-home"></i> {{ $order->shipping_address }}<br>
+                        @if($order->shipping_phone)
+                            <i class="fas fa-phone"></i> {{ $order->shipping_phone }}
+                        @endif
+                    @else
+                        <span>Shipping information not available</span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @if($order && $order->order_notes)
+    <div class="section-card">
+        <h2 class="section-title">
+            <i class="fas fa-sticky-note"></i>
+            Order Notes
+        </h2>
+        <div class="info-content">{{ $order->order_notes }}</div>
+    </div>
+    @endif
+
+    <div class="action-buttons">
+        <a href="/orders" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+        <a href="{{ route('store.home') }}" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> Continue Shopping
+        </a>
+    </div>
+</div>
+@if(isset($order->payment) && $order->payment->status === 'pending')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let msg = document.createElement('div');
+            msg.innerHTML = '<div style="text-align:center;padding:1.5rem;"><i class="fas fa-spinner fa-spin"></i> Waiting for payment confirmation...</div>';
+            document.body.appendChild(msg);
+        });
+        setTimeout(function() {
+            window.location.reload();
+        }, 5000);
+    </script>
+@endif
+@endsection
+
+@section('extra_js')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Modern page loading animation
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.3s ease';
+    setTimeout(() => {
+        document.body.style.opacity = '1';
+    }, 100);
+
+    // Enhanced item image interactions
+    const itemImages = document.querySelectorAll('.item-image img');
+    itemImages.forEach(img => {
+        img.addEventListener('click', function() {
+            // Create modal overlay for image preview
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                cursor: pointer;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            
+            const modalImg = document.createElement('img');
+            modalImg.src = this.src;
+            modalImg.style.cssText = `
+                max-width: 90%;
+                max-height: 90%;
+                border-radius: 12px;
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+                transform: scale(0.8);
+                transition: transform 0.3s ease;
+            `;
+            
+            modal.appendChild(modalImg);
+            document.body.appendChild(modal);
+            
+            // Animate in
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                modalImg.style.transform = 'scale(1)';
+            }, 10);
+            
+            // Close on click
+            modal.addEventListener('click', () => {
+                modal.style.opacity = '0';
+                modalImg.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    document.body.removeChild(modal);
+                }, 300);
+            });
+        });
+    });
+
+    // Enhanced status updates with visual feedback
+    const statusBadge = document.querySelector('.status-badge');
+    if (statusBadge) {
+        statusBadge.addEventListener('mouseover', function() {
+            this.style.transform = 'scale(1.05)';
+        });
+        
+        statusBadge.addEventListener('mouseout', function() {
+            this.style.transform = 'scale(1)';
+        });
+    }
+
+    // Auto-refresh with better UX
+    let refreshTimer;
+    let isPageVisible = true;
+    
+    // Track page visibility
+    document.addEventListener('visibilitychange', function() {
+        isPageVisible = !document.hidden;
+        if (isPageVisible) {
+            startRefreshTimer();
+        } else {
+            clearTimeout(refreshTimer);
+        }
+    });
+
+    function startRefreshTimer() {
+        clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(function() {
+            if (isPageVisible) {
+                // Show loading indicator
+                const loadingIndicator = document.createElement('div');
+                loadingIndicator.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--primary);
+                    color: white;
+                    padding: 0.75rem 1rem;
+                    border-radius: 12px;
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    font-size: 0.875rem;
+                    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
+                `;
+                loadingIndicator.innerHTML = `
+                    <i class="fas fa-sync-alt fa-spin"></i>
+                    Refreshing order status...
+                `;
+                document.body.appendChild(loadingIndicator);
+                
+                // Refresh after 2 seconds
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            }
+        }, 300000); // 5 minutes
+    }
+
+    // Start the refresh timer
+    startRefreshTimer();
+
+    // Enhanced button interactions
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Add loading states to action buttons
+    const actionButtons = document.querySelectorAll('.action-buttons .btn');
+    actionButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            if (this.href) {
+                this.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Loading...`;
+                this.style.pointerEvents = 'none';
+            }
+        });
+    });
+
+    // Enhanced order item animations
+    const orderItems = document.querySelectorAll('.order-item');
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 100);
+            }
+        });
+    }, observerOptions);
+
+    orderItems.forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(item);
+    });
+
+    // Smooth scroll for long pages
+    const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
+    smoothScrollLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add copy functionality to order ID
+    const orderTitle = document.querySelector('.order-title');
+    if (orderTitle) {
+        orderTitle.style.cursor = 'pointer';
+        orderTitle.title = 'Click to copy order ID';
+        
+        orderTitle.addEventListener('click', function() {
+            const orderId = this.textContent.replace('Order #', '').trim();
+            navigator.clipboard.writeText(orderId).then(() => {
+                // Show copied feedback
+                const feedback = document.createElement('div');
+                feedback.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: var(--success);
+                    color: white;
+                    padding: 1rem 2rem;
+                    border-radius: 12px;
+                    z-index: 9999;
+                    font-weight: 600;
+                    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+                `;
+                feedback.textContent = 'Order ID copied to clipboard!';
+                document.body.appendChild(feedback);
+                
+                setTimeout(() => {
+                    feedback.style.opacity = '0';
+                    setTimeout(() => {
+                        if (document.body.contains(feedback)) {
+                            document.body.removeChild(feedback);
+                        }
+                    }, 300);
+                }, 2000);
+            });
+        });
+    }
+
+    // Print functionality
+    window.printOrder = function() {
+        window.print();
+    };
+
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Ctrl/Cmd + P for print
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            window.print();
+        }
+        
+        // Escape to close any modals
+        if (e.key === 'Escape') {
+            const modals = document.querySelectorAll('[style*="position: fixed"]');
+            modals.forEach(modal => {
+                if (modal.style.zIndex === '9999') {
+                    modal.click();
+                }
+            });
+        }
+    });
+});
+</script>
+@endsection
