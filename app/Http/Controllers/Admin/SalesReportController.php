@@ -267,7 +267,7 @@ class SalesReportController extends Controller
             foreach ($customers as $userId => $userOrders) {
                 CustomerSalesReport::create([
                     'sales_report_id'    => $report->id,
-                    'user_id'            => $userId,   // FIXED: match DB column
+                    'user_id'            => $userId,  
                     'total_orders'       => $userOrders->count(),
                     'total_spent'        => $userOrders->sum('total_amount'),
                     'average_order_value'=> $userOrders->avg('total_amount'),
@@ -339,13 +339,13 @@ class SalesReportController extends Controller
     {
         $filterType = request('type', 'daily');
         Log::info('ExportExcel called', ['id' => $id, 'type' => $filterType]);
-        $report = \App\Models\SalesReport::find($id);
+        $report = SalesReport::find($id);
         if (!$report) {
             Log::error('ExportExcel: Report not found', ['id' => $id]);
             abort(404, 'Report not found');
         }
         $export = new SalesReportExport($id, $filterType);
-        $response = \Maatwebsite\Excel\Facades\Excel::download(
+        $response = Excel::download(
             $export,
             'sales_report_' . now()->format('Y-m-d') . '_' . $filterType . '.xlsx'
         );
@@ -376,7 +376,7 @@ class SalesReportController extends Controller
         $today = now()->toDateString();
         $report = SalesReport::where('start_date', $today)->where('end_date', $today)->first();
         if (!$report) {
-            $request = new \Illuminate\Http\Request([
+            $request = new Request([
                 'start_date' => $today,
                 'end_date' => $today,
                 'type' => 'daily',

@@ -142,7 +142,6 @@ class CartController extends Controller
         ]);
     }
 
-    // alias to support resourceful destroy
     public function destroy(Request $request, $itemId)
     {
         return $this->remove($request, $itemId);

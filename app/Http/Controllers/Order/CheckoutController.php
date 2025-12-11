@@ -67,7 +67,7 @@ class CheckoutController extends Controller
                 'image_url' => $prod->image_url ?? null,
             ];
         });
-        //Log::info('CheckoutController@index - products mapped', ['products' => $products]);
+        
 
         $shipping_methods = ShippingMethod::all();
         $payment_methods = PaymentMethod::all();
@@ -134,7 +134,7 @@ class CheckoutController extends Controller
         }
 
         try {
-            // Calculate total using product price, skip items with missing products
+            // Calculate total using product price
             $total = 0;
             foreach ($cartItems as $item) {
                 if ($item->product) {

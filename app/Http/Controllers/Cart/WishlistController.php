@@ -73,7 +73,6 @@ class WishlistController extends Controller
         }
 
         if ($request->ajax() || $request->wantsJson()) {
-            // Optionally, return wishlist count if needed
             $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
             return response()->json(['success' => true, 'message' => 'Added to wishlist!', 'wishlistCount' => $wishlistCount]);
         }

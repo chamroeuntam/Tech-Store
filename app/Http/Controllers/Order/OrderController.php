@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Schema;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Cart;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
@@ -19,6 +20,10 @@ use App\Models\ShippingMethod;
 use KHQR\BakongKHQR;
 use KHQR\Models\IndividualInfo;
 use KHQR\Helpers\KHQRData;
+use KHQR\Models\MerchantInfo;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+
 
 class OrderController extends Controller
 {
@@ -31,9 +36,9 @@ class OrderController extends Controller
             ->firstOrFail();
         return view('order.order-detail', compact('order'));
     }
-    // ================================
+    
     // USER ORDER DETAIL PAGE
-    // ================================
+
     public function show($order_id)
     {
         $order = Order::with(['order_items.product', 'payment'])
@@ -44,9 +49,9 @@ class OrderController extends Controller
         return view('order.order-detail', compact('order'));
     }
 
-    // ================================
+
     // ADMIN DASHBOARD PAGE
-    // ================================
+
     public function adminDashboard()
     {
         $total_orders     = Order::count();
@@ -64,9 +69,9 @@ class OrderController extends Controller
         ));
     }
 
-    // ================================
+
     // USER ORDER LIST PAGE
-    // ================================
+  
     public function index()
     {
         $orders = Order::with(['order_items.product', 'payment'])
@@ -77,18 +82,18 @@ class OrderController extends Controller
         return view('order.order-list', compact('or ders'));
     }
 
-    // ================================
+
     // SHOW CHECKOUT PAGE
-    // ================================
+
     public function checkoutPage(Request $request)
     {
         $productId   = $request->input('product');
         $quantity    = max(1, (int)$request->input('quantity', 1));
         $sessionCart = session('cart', []);
 
-        // ----------------------------
-        // BUY NOW: add single product to cart (normalize to numeric list)
-        // ----------------------------
+
+        // BUY NOW: add single product to cart 
+
         if ($productId) {
             $product = Product::find($productId);
 
@@ -119,7 +124,7 @@ class OrderController extends Controller
         $selectedPaymentMethod = old('payment_method') ?? null;
         $user = Auth::user();
 
-        // Normalize cart for display (supports many shapes)
+        // Normalize cart for display 
         $normalized = $this->normalizeSessionCart($sessionCart);
 
         $cartItems = [];
@@ -153,21 +158,21 @@ class OrderController extends Controller
         try {
             // Use PaymentController logic for KHQR QR string and image
             if ($user && $subtotal > 0) {
-                $merchant = new \KHQR\Models\MerchantInfo(
+                $merchant = new MerchantInfo(
                     'chamroeun_tam@wing',
                     'Chamroeun Tam',
                     'PHNOM PENH',
                     'MID001',
                     'Dev Bank',
                     null,
-                    \KHQR\Helpers\KHQRData::CURRENCY_KHR,
+                    KHQRData::CURRENCY_KHR,
                     round($subtotal, 2)
                 );
-                $result = \KHQR\BakongKHQR::generateMerchant($merchant);
+                $result = BakongKHQR::generateMerchant($merchant);
                 if (isset($result->data['qr'])) {
                     $qrString = $result->data['qr'];
-                    $qrCode = new \Endroid\QrCode\QrCode($qrString);
-                    $writer = new \Endroid\QrCode\Writer\PngWriter();
+                    $qrCode = new QrCode($qrString);
+                    $writer = new PngWriter();
                     $qrImage = base64_encode($writer->write($qrCode)->getString());
                 }
             }
@@ -185,9 +190,9 @@ class OrderController extends Controller
         ]);
     }
 
-    // ================================
+
     // PROCESS CHECKOUT
-    // ================================
+    /*
     public function checkout(Request $request)
     {
         $request->validate([
@@ -226,7 +231,7 @@ class OrderController extends Controller
                     }
                 } else {
                     // Fallback to DB cart
-                    $cartQuery = \App\Models\Cart::query();
+                    $cartQuery = Cart::query();
                     if (Auth::check()) {
                         $cartQuery->where('user_id', Auth::id());
                     } else {
@@ -342,9 +347,9 @@ class OrderController extends Controller
             session()->forget('cart');
             // Clear database cart for user/session
             if (Auth::check()) {
-                \App\Models\Cart::where('user_id', Auth::id())->delete();
+                Cart::where('user_id', Auth::id())->delete();
             } else {
-                \App\Models\Cart::where('session_id', $request->session()->getId())->delete();
+                Cart::where('session_id', $request->session()->getId())->delete();
             }
 
             // If KHQR payment method selected, redirect to KHQR payment flow
@@ -365,10 +370,11 @@ class OrderController extends Controller
             return redirect()->back()->withInput()->with('error', 'Order failed.');
         }
     }
+    */
 
-    // ================================
+    
     // ADMIN ORDER DETAILS
-    // ================================
+  
     public function adminOrderDetails($orderId)
     {
         $order = Order::with(['order_items.product', 'payment', 'shippingMethod', 'user', 'paymentMethod'])
@@ -417,10 +423,10 @@ class OrderController extends Controller
         return $result;
     }
 
-    // ----------------------------
+   
     // Helper: extract quantity reliably
     // Accepts keys 'quantity' or 'qty' or object property, defaults to 1
-    // ----------------------------
+
     protected function extractQuantity($entry): int
     {
         if (is_object($entry)) {
@@ -439,9 +445,9 @@ class OrderController extends Controller
         return max(1, $qty);
     }
 
-    // ----------------------------
+  
     // Helper: determine if array is list (numeric keys 0..n-1)
-    // ----------------------------
+ 
     protected function isList($arr): bool
     {
         if (!is_array($arr)) return false;

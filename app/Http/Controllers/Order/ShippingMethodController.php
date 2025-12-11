@@ -11,20 +11,20 @@ use App\Models\ShippingMethod;
 class ShippingMethodController extends Controller
 {
 
-    // 1. List all shipping methods
+    // List all shipping methods
     public function index()
     {
         $methods = ShippingMethod::orderBy('created_at', 'desc')->get();
         return view('shipping.index', compact('methods'));
     }
 
-    // 2. Show create form
+    // Show create form
     public function create()
     {
         return view('shipping.create');
     }
 
-    // 3. Store new shipping method
+    // Store new shipping method
    
     public function store(Request $request)
     {
@@ -48,7 +48,7 @@ class ShippingMethodController extends Controller
     }
 
    
-    // 4. Show edit form
+    // Show edit form
   
     public function edit($id)
     {
@@ -57,7 +57,7 @@ class ShippingMethodController extends Controller
     }
 
    
-    // 5. Update shipping method
+    // Update shipping method
 
     public function update(Request $request, $id)
     {
@@ -83,7 +83,7 @@ class ShippingMethodController extends Controller
     }
 
 
-    // 6. Delete shipping method
+    // Delete shipping method
 
     public function destroy($id)
     {

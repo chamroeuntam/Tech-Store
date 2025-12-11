@@ -236,11 +236,11 @@
             @yield('content')
         </div>
     </main>
-    <footer background="#14b8a6" class="footer">
+    {{-- <footer background="#14b8a6" class="footer">
         <div class="footer-container container text-center">
             <p>&copy; {{ date('Y') }} Tech Store. All rights reserved.</p>
         </div>
-    </footer>
+    </footer> --}}
     {{-- @stack('scripts') --}}
     <script>
         // Modern mobile navigation with better performance

@@ -44,7 +44,7 @@ class GoogleController extends Controller
             $baseUsername = $nickname ?: ($givenName ? Str::slug($givenName) : null) ?: (explode('@', $email)[0] ?? null) ?: 'google_' . $googleId;
             $username = $baseUsername;
             $counter = 1;
-            while (\App\Models\User::where('username', $username)->where('email', '!=', $email)->exists()) {
+            while (User::where('username', $username)->where('email', '!=', $email)->exists()) {
                 $username = $baseUsername . $counter;
                 $counter++;
             }
@@ -73,7 +73,7 @@ class GoogleController extends Controller
             );
             Log::info('Google OAuth: User created/updated', ['user' => $user]);
 
-            // Download Google avatar if user doesn't have one
+            // Download Google avatar 
             if (!$user->profile_picture && $googleUser->getAvatar()) {
                 $googleAvatarUrl = $googleUser->getAvatar();
                 $response = Http::get($googleAvatarUrl);
